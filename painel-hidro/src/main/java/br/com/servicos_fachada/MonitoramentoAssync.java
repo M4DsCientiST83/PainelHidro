@@ -25,7 +25,6 @@ public class MonitoramentoAssync
         {
             monitor.verificarNovosArquivos();   
             volume_acumulado = monitor.getVolume();
-            
         }
     }
 

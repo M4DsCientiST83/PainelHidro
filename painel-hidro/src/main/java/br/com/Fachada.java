@@ -1,5 +1,7 @@
 package br.com;
 
+import java.util.Scanner;
+
 import br.com.servicos_fachada.Autenticacao;
 
 public class Fachada 
@@ -11,13 +13,24 @@ public class Fachada
         auth = a;
     }
 
-    public boolean login(String u, String s)
+    public Usuario login(String u, String s)
     {
         return auth.autenticar(u, s);
     }
 
-    public void menu()
+    public void menuAdmin() 
     {
-        System.out.print("Qual operação deseja realizar?\n1 - Registrar ");
+        System.out.println("--- MENU ADMIN ---");
+        System.out.println("1) Cadastrar novo usuário");
+        System.out.println("2) Ativar monitoramento do hidrômetro");
+        System.out.println("0) Sair");
+    }
+
+    public void menuCliente() 
+    {
+        System.out.println("--- MENU CLIENTE ---");
+        System.out.println("1) Ver meus dados");
+        System.out.println("2) Consultar leitura");
+        System.out.println("0) Sair");    
     }
 }

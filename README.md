@@ -1,0 +1,4 @@
+compilar: 
+"mvn compile"
+
+rodar:
