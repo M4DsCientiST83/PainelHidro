@@ -1,6 +1,4 @@
-package br.com;
-
-import br.com.utilitarios.Role;
+package br.com.utilitarios;
 
 public class Usuario 
 {
@@ -41,5 +39,20 @@ public class Usuario
     public void setRole(Role role) 
     {
         this.role = role;
+    }
+
+    public void setUsername(String username) 
+    {
+        this.username = username;
+    }
+
+    public void setSenha(String senha) 
+    {
+        this.passwordHash = senha;
+    }
+
+    public void setId(int id) 
+    {
+        this.id = id;
     }
 }

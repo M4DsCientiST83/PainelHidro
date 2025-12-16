@@ -1,8 +1,8 @@
 package br.com.dao;
 
 import br.com.database.ConexaoBanco;
-import br.com.Usuario;
 import br.com.utilitarios.Role;
+import br.com.utilitarios.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

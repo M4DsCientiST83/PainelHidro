@@ -2,6 +2,7 @@ package br.com;
 
 import java.util.Scanner;
 import br.com.utilitarios.Role;
+import br.com.utilitarios.Usuario;
 
 public class Main 
 {
@@ -60,7 +61,7 @@ public class Main
             switch (opcao) 
             {
                 case 1:
-                    if (usuario.getRole() == Role.ADMIN) 
+                    if (f.obterDadosUsuario("Cargo", usuario) == Role.ADMIN.name()) 
                     {
                         System.out.print("Nome do novo usuário: ");
                         String username = scanner.nextLine();
@@ -72,7 +73,7 @@ public class Main
                         int id = Integer.parseInt(scanner.nextLine());
 
                         Usuario u = new Usuario(id, username, senha); 
-                        u.setRole(Role.CLIENTE);
+                        f.atualizarDadosUsuario("Cargo", u, "CLIENTE");
 
                         f.cadastrarUsuario(u);
 
@@ -85,7 +86,7 @@ public class Main
                     break;
 
                 case 2:
-                    if (usuario.getRole() == Role.ADMIN) 
+                    if (Role.valueOf(f.obterDadosUsuario("Cargo", usuario)) == Role.ADMIN) 
                     {
                         f.exibirUsuarios();
                     } 

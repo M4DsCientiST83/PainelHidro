@@ -1,7 +1,9 @@
 package br.com.servicos_fachada;
 
-import br.com.Usuario;
 import br.com.dao.UsuarioDAO;
+import br.com.utilitarios.Role;
+import br.com.utilitarios.Usuario;
+
 import java.util.List;
 
 public class CrudUsuarios 
@@ -40,5 +42,40 @@ public class CrudUsuarios
         }
 
         System.out.println("\n");
+    }
+
+    public void atualizarUsuario(String tipo, Usuario u, String dado)
+    {
+        if (tipo.equals("Nome"))
+        {
+            u.setUsername(dado);
+        }
+        else if (tipo.equals("ID"))
+        {
+            u.setId(Integer.parseInt(dado));
+        }
+        else if (tipo.equals("Cargo"))
+        {
+            u.setRole(Role.valueOf(dado));
+        }
+        System.err.println("Usuário ou tipo de dado inválido!\n"); 
+    }
+
+    public String obterDado(String tipo, Usuario u)
+    {
+        if (tipo.equals("Nome"))
+        {
+            return u.getUsername();
+        }
+        else if (tipo.equals("ID"))
+        {
+            return String.valueOf(u.getId());
+        }
+        else if (tipo.equals("Cargo"))
+        {
+            return u.getRole().name();
+        }
+        System.err.println("Usuário ou tipo de dado inválido!\n"); 
+        return "";
     }
 }

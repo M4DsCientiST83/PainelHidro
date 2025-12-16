@@ -3,11 +3,18 @@ package br.com;
 import br.com.servicos_fachada.Autenticacao;
 import br.com.servicos_fachada.CrudUsuarios;
 import br.com.servicos_fachada.MonitoramentoAssync;
+import br.com.utilitarios.Role;
+import br.com.utilitarios.Usuario;
 
 public class Fachada 
 {
-    //private final Autenticacao auth;
+    private CrudUsuarios cadastro;
     private MonitoramentoAssync monitor;
+
+    public Fachada()
+    {
+        cadastro = new CrudUsuarios();
+    }
 
     public Usuario login(String u, String s)
     {
@@ -43,7 +50,6 @@ public class Fachada
     public void cadastrarUsuario(Usuario u)
     {
         boolean check = false;
-        CrudUsuarios cadastro = new CrudUsuarios();
         check = cadastro.criarUsuario(u);
 
         if (check)
@@ -54,7 +60,16 @@ public class Fachada
 
     public void exibirUsuarios()
     {
-        CrudUsuarios cadastro = new CrudUsuarios();
         cadastro.exibirUsuarios();
+    }
+
+    public void atualizarDadosUsuario(String tipo, Usuario u, String dado)
+    {
+        cadastro.atualizarUsuario(tipo, u, dado);
+    }
+
+    public String obterDadosUsuario(String tipo, Usuario u)
+    {
+        return cadastro.obterDado(tipo, u);
     }
 }
