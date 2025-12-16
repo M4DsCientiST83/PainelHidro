@@ -44,38 +44,39 @@ public class CrudUsuarios
         System.out.println("\n");
     }
 
-    public void atualizarUsuario(String tipo, Usuario u, String dado)
+    public void atualizarUsuario(String tipo, int id, String dado)
     {
         if (tipo.equals("Nome"))
         {
-            u.setUsername(dado);
+            usuariodao.atualizarNome(id, dado);
         }
-        else if (tipo.equals("ID"))
+        else if (tipo.equals("Senha"))
         {
-            u.setId(Integer.parseInt(dado));
+            usuariodao.atualizarSenha(id, dado);
         }
         else if (tipo.equals("Cargo"))
         {
-            u.setRole(Role.valueOf(dado));
+            usuariodao.atualizarRole(id, Role.valueOf(dado));
         }
         System.err.println("Usuário ou tipo de dado inválido!\n"); 
     }
 
-    public String obterDado(String tipo, Usuario u)
+    public String obterDado(String tipo, int id)
     {
         if (tipo.equals("Nome"))
         {
-            return u.getUsername();
-        }
-        else if (tipo.equals("ID"))
-        {
-            return String.valueOf(u.getId());
+            return usuariodao.buscarPorId(id).getUsername();
         }
         else if (tipo.equals("Cargo"))
         {
-            return u.getRole().name();
+            return String.valueOf(usuariodao.buscarPorId(id).getRole());
         }
         System.err.println("Usuário ou tipo de dado inválido!\n"); 
         return "";
+    }
+
+    public void removerUsuario(int id_u)
+    {
+        usuariodao.removerUsuario(id_u);
     }
 }

@@ -11,3 +11,11 @@ CREATE TABLE usuario (
 INSERT INTO usuario VALUES (1, 'andrey', '1313', 'ADMIN');
 
 INSERT INTO usuario VALUES (2, 'rodrigues', '1234', 'CLIENTE');
+
+CREATE TABLE hidrometro(
+    id INT PRIMARY KEY,
+    usuario_id INT,
+    FOREIGN KEY(usuario_id) REFERENCES usuario(id)
+);
+
+INSERT INTO hidrometro VALUES (1000, )

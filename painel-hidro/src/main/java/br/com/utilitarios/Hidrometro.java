@@ -2,14 +2,32 @@ package br.com.utilitarios;
 
 public class Hidrometro 
 {
-    private double diametroEntrada;
-    private double velMediaFluxoAgua;
-    private int tempoSimulacao;
+    private int id;
+    private int usuario_id;
 
-    public Hidrometro(double de, double vmfa, int ts)
+    public Hidrometro(int id)
     {
-        diametroEntrada = de;
-        velMediaFluxoAgua = vmfa;
-        tempoSimulacao = ts;
+        this.id = id;
+        this.usuario_id = 0;
+    }
+
+    public void setId(int i)
+    {
+        id = i;
+    }
+
+    public void setUd(int ud)
+    {
+        usuario_id = ud;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public int getUd()
+    {
+        return usuario_id;
     }
 }
