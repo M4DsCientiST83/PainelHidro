@@ -1,15 +1,24 @@
 package br.com;
 
 import java.util.Scanner;
-import br.com.servicos_fachada.Autenticacao;
 import br.com.utilitarios.Role;
 
 public class Main 
 {
+    public static void exibir_menu(Fachada f, Usuario u)
+    {
+        if (u.getRole() == Role.ADMIN) 
+            {
+                f.menuAdmin();
+            } 
+            else 
+            {
+                f.menuCliente();
+            }
+    }
     public static void main(String[] args)
     {
-        Autenticacao auth = new Autenticacao();
-        Fachada f = new Fachada(auth);
+        Fachada f = new Fachada();
         Scanner scanner = new Scanner(System.in);
         
         Usuario usuario = null;
@@ -31,26 +40,43 @@ public class Main
             } 
         }
 
-        if (usuario.getRole() == Role.ADMIN) 
-        {
-            f.menuAdmin();
-        } 
-        else 
-        {
-            f.menuCliente();
-        }
-
-        System.out.print("Escolha uma opção: ");
-        int opcao = Integer.parseInt(scanner.nextLine());
-
         while (ok) 
         {
+            exibir_menu(f, usuario);
+        
+            System.out.print("Escolha uma opção: \n");
+            int opcao;
+
+            try 
+            {
+                opcao = Integer.parseInt(scanner.nextLine());
+            } 
+            catch (NumberFormatException e) 
+            {
+                System.out.println("Opção inválida");
+                continue;
+            }
+
             switch (opcao) 
             {
                 case 1:
                     if (usuario.getRole() == Role.ADMIN) 
                     {
-                        //f.cadastrarUsuario();
+                        System.out.print("Nome do novo usuário: ");
+                        String username = scanner.nextLine();
+
+                        System.out.print("Senha do novo usuário: ");
+                        String senha = scanner.nextLine();
+
+                        System.out.print("ID do novo usuário: ");
+                        int id = Integer.parseInt(scanner.nextLine());
+
+                        Usuario u = new Usuario(id, username, senha); 
+                        u.setRole(Role.CLIENTE);
+
+                        f.cadastrarUsuario(u);
+
+                        break;
                     } 
                     else 
                     {
@@ -61,7 +87,7 @@ public class Main
                 case 2:
                     if (usuario.getRole() == Role.ADMIN) 
                     {
-                        //f.listarUsuarios();
+                        f.exibirUsuarios();
                     } 
                     else 
                     {

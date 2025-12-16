@@ -1,4 +1,0 @@
-[
-  { "username": "andrey", "passwordHash": "1313", "role": "ADMIN" },
-  { "username": "rodrigues", "passwordHash": "123", "role": "CLIENTE" }
-]

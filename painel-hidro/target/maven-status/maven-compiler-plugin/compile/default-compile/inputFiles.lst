@@ -1,3 +1,5 @@
+C:\PainelHidro\painel-hidro\src\main\java\br\com\dao\UsuarioDAO.java
+C:\PainelHidro\painel-hidro\src\main\java\br\com\database\ConexaoBanco.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\Fachada.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\leitura_imagens\MonitorPastaImagem.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\leitura_imagens\Observador.java
@@ -5,7 +7,10 @@ C:\PainelHidro\painel-hidro\src\main\java\br\com\leitura_imagens\ProcessadorImag
 C:\PainelHidro\painel-hidro\src\main\java\br\com\leitura_imagens\Sujeito.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\Main.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\servicos_fachada\Autenticacao.java
+C:\PainelHidro\painel-hidro\src\main\java\br\com\servicos_fachada\CrudUsuarios.java
+C:\PainelHidro\painel-hidro\src\main\java\br\com\servicos_fachada\HidroUsuario.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\servicos_fachada\MonitoramentoAssync.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\Usuario.java
+C:\PainelHidro\painel-hidro\src\main\java\br\com\utilitarios\Hidrometro.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\utilitarios\LeituraContasJSON.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\utilitarios\Role.java

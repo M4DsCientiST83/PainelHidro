@@ -1,18 +1,13 @@
 package br.com.servicos_fachada;
 
 import br.com.Usuario;
-import br.com.utilitarios.LeituraContasJSON;
+import br.com.dao.UsuarioDAO;
 
 public class Autenticacao
 {
-    public Usuario autenticar(String username, String senha)
+    public Usuario autenticar(String u, String s)
     {
-        return LeituraContasJSON.carregarUsuarios().stream()
-                .filter(u ->
-                        u.getUsername().equals(username) &&
-                        u.getPasswordHash().equals(senha)
-                )
-                .findFirst()
-                .orElse(null);
+        UsuarioDAO ud = new UsuarioDAO();
+        return ud.autenticar(u, s);
     }
 }

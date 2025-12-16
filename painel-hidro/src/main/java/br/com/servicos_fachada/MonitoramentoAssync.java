@@ -27,5 +27,4 @@ public class MonitoramentoAssync
             volume_acumulado = monitor.getVolume();
         }
     }
-
 }

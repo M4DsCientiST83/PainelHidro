@@ -4,9 +4,17 @@ import br.com.utilitarios.Role;
 
 public class Usuario 
 {
-    public String username;
-    public String passwordHash;
-    public Role role;
+    private int id; 
+    private String username;
+    private String passwordHash;
+    private Role role;
+
+    public Usuario(int id, String u, String ph) 
+    {
+        this.id = id;
+        this.username = u;
+        this.passwordHash = ph;
+    }
 
     public Usuario() {}
 
@@ -23,6 +31,11 @@ public class Usuario
     public String getPasswordHash()
     {
         return passwordHash;
+    }
+
+    public int getId()
+    {
+        return id;
     }
 
     public void setRole(Role role) 
