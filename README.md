@@ -1,4 +1,5 @@
 compilar: 
-"mvn compile"
+"mvn compile package"
 
-rodar:
+rodar: 
+"mvn exec:java"
