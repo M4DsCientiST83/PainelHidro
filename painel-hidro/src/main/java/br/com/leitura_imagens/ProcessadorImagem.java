@@ -38,10 +38,11 @@ public class ProcessadorImagem implements Observador {
             // Focar apenas na área do retângulo com os números
             int[][] crops = new int[][] {
                     // x, y, width, height (valores relativos serão convertidos abaixo)
-                    { (int) (w * 0.305), (int) (h * 0.165), (int) (w * 0.39), (int) (h * 0.065) }, // Display preciso
-                    { (int) (w * 0.28), (int) (h * 0.155), (int) (w * 0.44), (int) (h * 0.075) }, // Um pouco mais largo
-                    { (int) (w * 0.30), (int) (h * 0.16), (int) (w * 0.40), (int) (h * 0.07) }, // Alternativa 1
-                    { (int) (w * 0.32), (int) (h * 0.17), (int) (w * 0.36), (int) (h * 0.06) } // Mais estreito
+                    { (int) (w * 0.30), (int) (h * 0.36), (int) (w * 0.40), (int) (h * 0.06) }, // Display principal -
+                                                                                                // mais baixo
+                    { (int) (w * 0.28), (int) (h * 0.35), (int) (w * 0.44), (int) (h * 0.07) }, // Um pouco mais largo
+                    { (int) (w * 0.25), (int) (h * 0.34), (int) (w * 0.50), (int) (h * 0.08) }, // Ainda mais largo
+                    { (int) (w * 0.32), (int) (h * 0.37), (int) (w * 0.36), (int) (h * 0.05) } // Mais estreito
             };
 
             BufferedImage scaled = null;
@@ -71,18 +72,16 @@ public class ProcessadorImagem implements Observador {
                 g2.drawImage(tmp, 0, 0, null);
                 g2.dispose();
 
-                // opcional: binarizar (threshold) para reduzir ruído
-                int threshold = 150;
-                for (int y2 = 0; y2 < scaled.getHeight(); y2++) {
-                    for (int x2 = 0; x2 < scaled.getWidth(); x2++) {
-                        int rgb = scaled.getRGB(x2, y2);
-                        int grayVal = rgb & 0xFF;
-                        int newVal = (grayVal < threshold) ? 0x00 : 0xFFFFFF;
-                        scaled.setRGB(x2, y2, (0xFF << 24) | newVal);
-                    }
-                }
-
-                System.out.println("Tentando recorte: x=" + cx + " y=" + cy + " w=" + cw + " h=" + ch);
+                // DESABILITADO: binarização estava removendo o texto
+                // int threshold = 150;
+                // for (int y2 = 0; y2 < scaled.getHeight(); y2++) {
+                // for (int x2 = 0; x2 < scaled.getWidth(); x2++) {
+                // int rgb = scaled.getRGB(x2, y2);
+                // int grayVal = rgb & 0xFF;
+                // int newVal = (grayVal < threshold) ? 0x00 : 0xFFFFFF;
+                // scaled.setRGB(x2, y2, (0xFF<<24) | newVal);
+                // }
+                // }
 
                 // tentar OCR nesse recorte
                 ITesseract tesseractTry = new Tesseract();
@@ -92,9 +91,9 @@ public class ProcessadorImagem implements Observador {
 
                 try {
                     String textoTry = tesseractTry.doOCR(scaled);
-                    System.out.println("OCR raw tentativa: [" + textoTry + "]");
+                    // System.out.println("OCR raw tentativa: [" + textoTry + "]");
                     String limpoTry = textoTry.replaceAll("[^0-9.]", "");
-                    System.out.println("OCR limpo tentativa: [" + limpoTry + "]");
+                    // System.out.println("OCR limpo tentativa: [" + limpoTry + "]");
                     if (limpoTry != null && !limpoTry.isEmpty()) {
                         ocrResult = limpoTry;
                         break;
@@ -112,21 +111,21 @@ public class ProcessadorImagem implements Observador {
             // só números e ponto
             tesseract.setVariable("tessedit_char_whitelist", "0123456789.");
 
-            System.out.println("Processando arquivo: " + imagemFile.getAbsolutePath());
+            // System.out.println("Processando arquivo: " + imagemFile.getAbsolutePath());
             if (ocrResult == null) {
                 // última tentativa com o scaled gerado
                 try {
                     String texto = tesseract.doOCR(scaled);
-                    System.out.println("OCR raw fallback: [" + texto + "]");
+                    // System.out.println("OCR raw fallback: [" + texto + "]");
                     ocrResult = texto.replaceAll("[^0-9.]", "");
-                    System.out.println("OCR limpo fallback: [" + ocrResult + "]");
+                    // System.out.println("OCR limpo fallback: [" + ocrResult + "]");
                 } catch (Exception e) {
                     // System.out.println("OCR fallback erro: " + e.getMessage());
                 }
             }
 
             if (ocrResult == null || ocrResult.isEmpty()) {
-                System.out.println("Nenhum texto numérico detectado.");
+                // System.out.println("Nenhum texto numérico detectado.");
                 return;
             }
 
