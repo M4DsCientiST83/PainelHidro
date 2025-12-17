@@ -148,3 +148,4 @@ public class ProcessadorImagem implements Observador
         }
     }
 }
+
