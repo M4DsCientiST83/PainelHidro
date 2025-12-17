@@ -16,7 +16,16 @@ public class CadastrarHidrometroCommand implements ComandoAdmin {
 
     @Override
     public void executar() {
-        Hidrometro hidrometro = fachada.criarHidro(id);
-        fachada.cadastrarHidro(hidrometro, tipo);
+        try {
+            Hidrometro hidrometro = fachada.criarHidro(id);
+            fachada.cadastrarHidro(hidrometro, tipo);
+        } catch (RuntimeException e) {
+            String message = e.getMessage();
+            if (e.getCause() != null && e.getCause().getMessage().contains("Duplicate entry")) {
+                System.out.println("Erro: Já existe um hidrômetro cadastrado com o ID " + id);
+            } else {
+                System.out.println("Erro ao cadastrar hidrômetro: " + message);
+            }
+        }
     }
 }

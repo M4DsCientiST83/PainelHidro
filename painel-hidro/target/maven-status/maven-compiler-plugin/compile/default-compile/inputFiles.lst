@@ -11,7 +11,11 @@ C:\PainelHidro\painel-hidro\src\main\java\br\com\command\command_admin\ExibirUsu
 C:\PainelHidro\painel-hidro\src\main\java\br\com\command\command_admin\MenuAdminInvoker.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\command\command_admin\RemoverHidrometroCommand.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\command\command_admin\RemoverUsuarioCommand.java
+C:\PainelHidro\painel-hidro\src\main\java\br\com\command\command_client\AtivarMeuHidroCommand.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\command\command_client\ComandoCliente.java
+C:\PainelHidro\painel-hidro\src\main\java\br\com\command\command_client\ConsultarLeituraCommand.java
+C:\PainelHidro\painel-hidro\src\main\java\br\com\command\command_client\DesativarMeuHidroCommand.java
+C:\PainelHidro\painel-hidro\src\main\java\br\com\command\command_client\ExibirMeuMonitoramentoCommand.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\command\command_client\ExibirMeusHidrometrosCommand.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\command\command_client\MenuClienteInvoker.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\dao\HidrometroDAO.java

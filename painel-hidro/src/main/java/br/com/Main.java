@@ -77,8 +77,7 @@ public class Main {
                     if (usuario.getRole() == Role.ADMIN) {
                         adminCmd = new ExibirUsuariosCommand(f);
                     } else {
-                        // TODO: Ver meus dados (future implementation)
-                        System.out.println("Funcionalidade em desenvolvimento");
+                        clienteCmd = new ConsultarLeituraCommand(f, usuario.getId());
                     }
                     break;
 
@@ -95,8 +94,13 @@ public class Main {
 
                         adminCmd = new AtualizarUsuarioCommand(f, tipo, id, dado);
                     } else {
-                        // TODO: Consultar leitura (future implementation)
-                        System.out.println("Funcionalidade em desenvolvimento");
+                        System.out.print("Digite o id do hidrômetro a ser monitorado:\n");
+                        int idH = Integer.parseInt(scanner.nextLine());
+
+                        System.out.print("Digite o caminho da pasta para monitoramento:\n");
+                        String caminho = scanner.nextLine();
+
+                        clienteCmd = new AtivarMeuHidroCommand(f, caminho, idH);
                     }
                     break;
 
@@ -107,6 +111,10 @@ public class Main {
 
                         adminCmd = new RemoverUsuarioCommand(f, id);
                     }
+                    else
+                    {
+                        clienteCmd = new ExibirMeuMonitoramentoCommand(f);
+                    }
                     break;
 
                 case 5:
@@ -114,12 +122,17 @@ public class Main {
                         System.out.print("Digite o id do hidrômetro:\n");
                         int id = Integer.parseInt(scanner.nextLine());
 
-                        System.out.print("Digite o tipo do hidrômetro (A= Hidrômetro Rodrigues, B= Hidrômetro Cefras):\n");
+                        System.out.print(
+                                "Digite o tipo do hidrômetro (A= Hidrômetro Rodrigues, B= Hidrômetro Cefras):\n");
                         String inputTipo = scanner.nextLine();
                         char tipo = (inputTipo != null && !inputTipo.isEmpty()) ? inputTipo.toUpperCase().charAt(0)
                                 : 'A';
 
                         adminCmd = new CadastrarHidrometroCommand(f, id, tipo);
+                    }
+                    else
+                    {
+                        clienteCmd = new DesativarMeuHidroCommand(f);
                     }
                     break;
 
@@ -176,7 +189,7 @@ public class Main {
 
                 case 0:
                     System.out.println("Saindo...");
-                    ok = false;
+                    System.exit(0);
                     break;
 
                 default:

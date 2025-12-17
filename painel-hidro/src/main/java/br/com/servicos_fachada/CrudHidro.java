@@ -57,4 +57,8 @@ public class CrudHidro {
             System.out.println("\nTotal: " + hidrometros.size() + " hidrômetro(s)\n");
         }
     }
+
+    public double consultarLeitura(int idHidrometro) {
+        return hidrodao.buscarVolume(idHidrometro);
+    }
 }

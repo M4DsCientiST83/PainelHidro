@@ -37,9 +37,9 @@ public class Fachada {
         System.out.println("6) Associar hidrômetro ao usuário (Id_hidrômetro e Id_usuário)");
         System.out.println("7) Exibir hidrômetros associados a usuários");
         System.out.println("8) Remover Hidrômetro (Id_hidrômetro)");
-        System.out.println("9) Ativar monitoramento do hidrômetro");
+        System.out.println("9) Ativar monitoramento do hidrômetro (Id_hidrômetro, caminho_arquivo)");
         System.out.println("10) Exibir monitoramento");
-        System.out.println("11) Desativar monitoramento");
+        System.out.println("11) Desativar monitoramento (Id_hidrômetro)");
         System.out.println("0) Sair");
     }
 
@@ -47,6 +47,9 @@ public class Fachada {
         System.out.println("--- MENU CLIENTE ---");
         System.out.println("1) Exibir meus hidrômetros");
         System.out.println("2) Consultar leitura");
+        System.out.println("3) Ativar monitoramento do hidrômetro (Id_hidrômetro, caminho_arquivo)");
+        System.out.println("4) Exibir monitoramento");
+        System.out.println("5) Desativar monitoramento (Id_hidrômetro)");
         System.out.println("0) Sair");
     }
 
@@ -159,5 +162,9 @@ public class Fachada {
 
     public void exibirHidrometrosDoUsuario(int idUsuario) {
         crudh.exibirHidrometrosDoUsuario(idUsuario);
+    }
+
+    public double consultarLeitura(int idHidrometro) {
+        return crudh.consultarLeitura(idHidrometro);
     }
 }

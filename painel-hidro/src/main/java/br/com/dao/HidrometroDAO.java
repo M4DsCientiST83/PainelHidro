@@ -156,4 +156,24 @@ public class HidrometroDAO {
             throw new RuntimeException("Erro ao buscar tipo do hidrômetro", e);
         }
     }
+
+    public double buscarVolume(int idHidrometro) {
+        String sql = "SELECT volume_acumulado FROM hidrometro WHERE id = ?";
+
+        Connection conn = ConexaoBanco.getInstancia().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idHidrometro);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("volume_acumulado");
+            } else {
+                throw new RuntimeException("Hidrômetro não encontrado");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar volume do hidrômetro", e);
+        }
+    }
 }
