@@ -1,41 +1,55 @@
 package br.com.database;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Properties;
+import java.io.InputStream;
 
 public class ConexaoBanco 
 {
-    private static String url;
-    private static String user;
-    private static String pass;
+    private static ConexaoBanco instancia;
+    private Connection connection;
 
-    static 
+    private ConexaoBanco() 
     {
-            try 
-            {
-                Properties props = new Properties();
-                props.load(
-                    ConexaoBanco.class
-                        .getClassLoader()
-                        .getResourceAsStream("db.properties")
-                );
+        try 
+        {
+            Properties props = new Properties();
 
-                url = props.getProperty("db.url");
-                user = props.getProperty("db.user");
-                pass = props.getProperty("db.password");
-            } 
-            catch (IOException e) 
+            InputStream input = ConexaoBanco.class
+                .getClassLoader()
+                .getResourceAsStream("db.properties");
+
+            if (input == null) 
             {
-                throw new RuntimeException("Erro ao carregar db.properties", e);
+                throw new RuntimeException("Arquivo db.properties não encontrado no classpath");
             }
-        }
 
-    public static Connection conectar() throws SQLException 
-    {
-        return DriverManager.getConnection(url, user, pass);
+            props.load(input);
+
+            String url  = props.getProperty("db.url");
+            String user = props.getProperty("db.user");
+            String pass = props.getProperty("db.password");
+
+            connection = DriverManager.getConnection(url, user, pass);
+        } 
+        catch (Exception e) 
+        {
+            throw new RuntimeException("Erro ao conectar ao banco", e);
+        }
     }
-    
+
+    public static synchronized ConexaoBanco getInstancia() 
+    {
+        if (instancia == null) 
+        {
+            instancia = new ConexaoBanco();
+        }
+        return instancia;
+    }
+
+    public Connection getConnection() 
+    {
+        return connection;
+    }
 }

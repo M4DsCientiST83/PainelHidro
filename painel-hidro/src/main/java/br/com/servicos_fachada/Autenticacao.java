@@ -1,13 +1,18 @@
 package br.com.servicos_fachada;
 
-import br.com.dao.UsuarioDAO;
-import br.com.utilitarios.Usuario;
+import br.com.factory.Usuario;
 
-public class Autenticacao
+public class Autenticacao 
 {
-    public Usuario autenticar(String u, String s)
+    private AutenticacaoTemplate autenticacaoTemplate;
+
+    public Autenticacao() 
     {
-        UsuarioDAO ud = new UsuarioDAO();
-        return ud.autenticar(u, s);
+        this.autenticacaoTemplate = new AutenticacaoPadrao();
+    }
+
+    public Usuario autenticar(String u, String s) 
+    {
+        return autenticacaoTemplate.autenticar(u, s);
     }
 }

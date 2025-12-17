@@ -3,9 +3,7 @@ package br.com.leitura_imagens;
 import java.io.File;
 import java.util.*;
 
-public class MonitorPastaImagem implements Sujeito 
-{
-
+public class MonitorPastaImagem implements Sujeito {
     private final List<Observador> observadores = new ArrayList<>();
     private final Set<String> arquivosConhecidos = new HashSet<>();
     private final File pasta;
@@ -13,62 +11,66 @@ public class MonitorPastaImagem implements Sujeito
     private double volume;
     private String nome;
 
-    public MonitorPastaImagem(String caminhoPasta) 
-    {
+    public MonitorPastaImagem(String caminhoPasta) {
         this.pasta = new File(caminhoPasta);
     }
 
     @Override
-    public void cadastrar(Observador o) 
-    {
+    public void cadastrar(Observador o) {
         observadores.add(o);
     }
 
     @Override
-    public void remover(Observador o) 
-    {
+    public void remover(Observador o) {
         observadores.remove(o);
     }
 
     @Override
-    public void notificar() 
-    {
-        for (Observador o : observadores) 
-        {
-           o.atualizar();
+    public void notificar() {
+        for (Observador o : observadores) {
+            o.atualizar();
         }
     }
 
-    public void setVolume(double v) 
-    {
+    public void setVolume(double v) {
         volume = v;
     }
 
-    public String getNome()
-    {
+    public String getNome() {
         return nome;
     }
 
-    public double getVolume()
-    {
+    public double getVolume() {
         return volume;
     }
 
-    public void verificarNovosArquivos() 
-    {
-        File[] arquivos = pasta.listFiles((dir, name) ->
-                name.endsWith(".png") || name.endsWith(".jpg"));
+    public void verificarNovosArquivos() {
+        File[] arquivos = pasta.listFiles((dir, name) -> name.endsWith(".png") || name.endsWith(".jpg"));
 
-        if (arquivos == null) return;
+        if (arquivos == null)
+            return;
 
-        for (File f : arquivos) 
-        {
-            if (!arquivosConhecidos.contains(f.getName())) 
-            {
+        for (File f : arquivos) {
+            if (!arquivosConhecidos.contains(f.getName())) {
                 arquivosConhecidos.add(f.getName());
                 nome = f.getName();
                 notificar();
             }
         }
+    }
+
+    public void inicializarArquivosConhecidos() {
+        File[] arquivos = pasta.listFiles((dir, name) -> name.endsWith(".png") || name.endsWith(".jpg"));
+
+        if (arquivos == null)
+            return;
+
+        for (File f : arquivos) {
+            arquivosConhecidos.add(f.getName());
+        }
+    }
+
+    public String getPastaPath() {
+        return pasta.getAbsolutePath();
     }
 }

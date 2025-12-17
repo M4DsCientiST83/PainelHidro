@@ -1,8 +1,11 @@
 package br.com.dao;
 
 import br.com.database.ConexaoBanco;
+import br.com.factory.Usuario;
+import br.com.factory.UsuarioAdminCreator;
+import br.com.factory.UsuarioClienteCreator;
+import br.com.factory.UsuarioCreator;
 import br.com.utilitarios.Role;
-import br.com.utilitarios.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,8 +14,25 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class UsuarioDAO 
 {
+    private Usuario criarUsuarioFactory(int id, String nome, String senha, Role role) 
+    {
+        UsuarioCreator creator;
+
+        if (role == Role.ADMIN) 
+            {
+            creator = new UsuarioAdminCreator();
+        } 
+        else 
+            {
+            creator = new UsuarioClienteCreator();
+        }
+
+        return creator.criar(id, nome, senha);
+    }
+
     public void salvar(Usuario usuario) 
     {
         String sql = """
@@ -20,8 +40,9 @@ public class UsuarioDAO
             VALUES (?, ?, ?, ?)
         """;
 
-        try (Connection conn = ConexaoBanco.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) 
+        Connection conn = ConexaoBanco.getInstancia().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) 
         {
             stmt.setInt(1, usuario.getId());
             stmt.setString(2, usuario.getUsername());
@@ -39,26 +60,24 @@ public class UsuarioDAO
     public List<Usuario> retornarTodos() 
     {
         List<Usuario> usuarios = new ArrayList<>();
-
         String sql = "SELECT id, nome, senha, role FROM usuario";
 
-        try (Connection conn = ConexaoBanco.conectar();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery()) {
+        Connection conn = ConexaoBanco.getInstancia().getConnection();
 
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()) 
+        {
             while (rs.next()) 
             {
-                Usuario u = new Usuario(
-                    rs.getInt("id"),
-                    rs.getString("nome"),
-                    rs.getString("senha")
+                int id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                String senha = rs.getString("senha");
+                Role role = Role.valueOf(rs.getString("role"));
+
+                usuarios.add(
+                    criarUsuarioFactory(id, nome, senha, role)
                 );
-
-                u.setRole(Role.valueOf(rs.getString("role")));
-
-                usuarios.add(u);
             }
-
         } 
         catch (Exception e) 
         {
@@ -72,9 +91,10 @@ public class UsuarioDAO
     {
         String sql = "SELECT id, nome, senha, role FROM usuario WHERE nome = ? AND senha = ?";
 
-        try (Connection conn = ConexaoBanco.conectar();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
+        Connection conn = ConexaoBanco.getInstancia().getConnection();
 
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) 
+        {
             stmt.setString(1, nome);
             stmt.setString(2, senha);
 
@@ -82,18 +102,14 @@ public class UsuarioDAO
 
             if (rs.next()) 
             {
-                Usuario u = new Usuario(
-                    rs.getInt("id"),
-                    rs.getString("nome"),
-                    rs.getString("senha")
-                );
+                int id = rs.getInt("id");
+                String roleStr = rs.getString("role");
+                Role role = Role.valueOf(roleStr);
 
-                u.setRole(Role.valueOf(rs.getString("role")));
-                return u;
+                return criarUsuarioFactory(id, nome, senha, role);
             }
 
-            return null; 
-
+            return null;
         } 
         catch (Exception e) 
         {
@@ -105,21 +121,20 @@ public class UsuarioDAO
     {
         String sql = "SELECT id, nome, senha, role FROM usuario WHERE id = ?";
 
-        try (Connection conn = ConexaoBanco.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) 
+        Connection conn = ConexaoBanco.getInstancia().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) 
         {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) 
             {
-                Usuario u = new Usuario(
-                    rs.getInt("id"),
-                    rs.getString("nome"),
-                    rs.getString("senha")
-                );
-                u.setRole(Role.valueOf(rs.getString("role")));
-                return u;
+                String nome = rs.getString("nome");
+                String senha = rs.getString("senha");
+                Role role = Role.valueOf(rs.getString("role"));
+
+                return criarUsuarioFactory(id, nome, senha, role);
             }
             return null;
         } 
@@ -133,8 +148,9 @@ public class UsuarioDAO
     {
         String sql = "UPDATE usuario SET role = ? WHERE id = ?";
 
-        try (Connection conn = ConexaoBanco.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) 
+        Connection conn = ConexaoBanco.getInstancia().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) 
         {
             stmt.setString(1, novaRole.name());
             stmt.setInt(2, idUsuario);
@@ -152,8 +168,9 @@ public class UsuarioDAO
     {
         String sql = "UPDATE usuario SET senha = ? WHERE id = ?";
 
-        try (Connection conn = ConexaoBanco.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) 
+        Connection conn = ConexaoBanco.getInstancia().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) 
         {
             stmt.setString(1, novaSenha);
             stmt.setInt(2, idUsuario);
@@ -170,8 +187,10 @@ public class UsuarioDAO
     {
         String sql = "UPDATE usuario SET nome = ? WHERE id = ?";
 
-        try (Connection conn = ConexaoBanco.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        Connection conn = ConexaoBanco.getInstancia().getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) 
+        {
 
             stmt.setString(1, novoNome);
             stmt.setInt(2, idUsuario);
@@ -193,12 +212,16 @@ public class UsuarioDAO
         String removerUsuario =
             "DELETE FROM usuario WHERE id = ?";
 
-        try (Connection conn = ConexaoBanco.conectar()) 
+        Connection conn = ConexaoBanco.getInstancia().getConnection();
+
+        try 
         {
             conn.setAutoCommit(false);
 
-            try (PreparedStatement stmt1 = conn.prepareStatement(desassociarHidrometros);
-                PreparedStatement stmt2 = conn.prepareStatement(removerUsuario)) 
+            try (
+                PreparedStatement stmt1 = conn.prepareStatement(desassociarHidrometros);
+                PreparedStatement stmt2 = conn.prepareStatement(removerUsuario)
+            ) 
             {
                 stmt1.setInt(1, idUsuario);
                 stmt1.executeUpdate();
@@ -212,19 +235,16 @@ public class UsuarioDAO
                 }
 
                 conn.commit();
-
             } 
             catch (Exception e) 
             {
                 conn.rollback();
                 throw e;
             }
-
         } 
         catch (SQLException e) 
         {
             throw new RuntimeException("Erro ao remover usuário", e);
         }
     }
-
 }

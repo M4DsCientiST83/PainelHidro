@@ -1,8 +1,8 @@
 package br.com.servicos_fachada;
 
 import br.com.dao.UsuarioDAO;
+import br.com.factory.Usuario;
 import br.com.utilitarios.Role;
-import br.com.utilitarios.Usuario;
 
 import java.util.List;
 

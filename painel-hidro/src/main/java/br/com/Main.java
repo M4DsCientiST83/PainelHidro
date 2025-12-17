@@ -1,31 +1,31 @@
 package br.com;
 
 import java.util.Scanner;
+
+import br.com.command.command_admin.*;
+import br.com.command.command_client.*;
+import br.com.factory.Usuario;
 import br.com.utilitarios.*;
 
-public class Main 
-{
-    public static void exibir_menu(Fachada f, Usuario u)
-    {
-        if (u.getRole() == Role.ADMIN) 
-            {
-                f.menuAdmin();
-            } 
-            else 
-            {
-                f.menuCliente();
-            }
+public class Main {
+    public static void exibir_menu(Fachada f, Usuario u) {
+        if (u.getRole() == Role.ADMIN) {
+            f.menuAdmin();
+        } else {
+            f.menuCliente();
+        }
     }
-    public static void main(String[] args)
-    {
+
+    public static void main(String[] args) {
         Fachada f = new Fachada();
+        MenuAdminInvoker adminInvoker = new MenuAdminInvoker();
+        MenuClienteInvoker clienteInvoker = new MenuClienteInvoker();
         Scanner scanner = new Scanner(System.in);
-        
+
         Usuario usuario = null;
         boolean ok = false;
 
-        while(!ok)
-        {
+        while (!ok) {
             System.out.print("Usuário: ");
             String username = scanner.nextLine();
 
@@ -33,35 +33,31 @@ public class Main
             String senha = scanner.nextLine();
 
             usuario = f.login(username, senha);
-            
-            if (usuario != null)
-            {
+
+            if (usuario != null) {
                 ok = true;
-            } 
+            }
         }
 
-        while (ok) 
-        {
+        while (ok) {
             exibir_menu(f, usuario);
-        
+
             System.out.print("Escolha uma opção: \n");
             int opcao;
 
-            try 
-            {
+            try {
                 opcao = Integer.parseInt(scanner.nextLine());
-            } 
-            catch (NumberFormatException e) 
-            {
+            } catch (NumberFormatException e) {
                 System.out.println("Opção inválida");
                 continue;
             }
 
-            switch (opcao) 
-            {
+            ComandoAdmin adminCmd = null;
+            ComandoCliente clienteCmd = null;
+
+            switch (opcao) {
                 case 1:
-                    if (f.obterDadosUsuario("Cargo", f.obterId(usuario)) == Role.ADMIN.name()) 
-                    {
+                    if (usuario.getRole() == Role.ADMIN) {
                         System.out.print("Nome do novo usuário: ");
                         String username = scanner.nextLine();
 
@@ -71,119 +67,105 @@ public class Main
                         System.out.print("ID do novo usuário: ");
                         int id = Integer.parseInt(scanner.nextLine());
 
-                        Usuario u = f.criarUsuario(id, username, senha);
-                        f.atualizarDadosUsuario("Cargo", f.obterId(u), "CLIENTE");
-
-                        f.cadastrarUsuario(u);
-
-                        break;
-                    } 
-                    else 
-                    {
-                        //f.verConsumo();
+                        adminCmd = new CadastrarUsuarioCommand(f, id, username, senha);
+                    } else {
+                        clienteCmd = new ExibirMeusHidrometrosCommand(f, usuario.getId());
                     }
                     break;
 
                 case 2:
-                    if (f.obterDadosUsuario("Cargo", f.obterId(usuario)) == Role.ADMIN.name()) 
-                    {
-                        f.exibirUsuarios();
-                    } 
-                    else 
-                    {
-                        //f.verHistorico();
+                    if (usuario.getRole() == Role.ADMIN) {
+                        adminCmd = new ExibirUsuariosCommand(f);
+                    } else {
+                        // TODO: Ver meus dados (future implementation)
+                        System.out.println("Funcionalidade em desenvolvimento");
                     }
                     break;
-                
+
                 case 3:
-                    if (f.obterDadosUsuario("Cargo", f.obterId(usuario)) == Role.ADMIN.name()) 
-                    {
+                    if (usuario.getRole() == Role.ADMIN) {
                         System.out.print("Digite o id do usuário:\n");
                         int id = Integer.parseInt(scanner.nextLine());
 
                         System.out.print("Digite o dado que quer alterar:\n");
-                        String tipo_dado = scanner.nextLine();
+                        String tipo = scanner.nextLine();
 
                         System.out.print("Digite a alteração:\n");
                         String dado = scanner.nextLine();
 
-                        f.atualizarDadosUsuario(tipo_dado, id, dado);
-                    } 
-                    else 
-                    {
-                        //f.verHistorico();
+                        adminCmd = new AtualizarUsuarioCommand(f, tipo, id, dado);
+                    } else {
+                        // TODO: Consultar leitura (future implementation)
+                        System.out.println("Funcionalidade em desenvolvimento");
                     }
                     break;
 
                 case 4:
-                    if (f.obterDadosUsuario("Cargo", f.obterId(usuario)) == Role.ADMIN.name()) 
-                    {
+                    if (usuario.getRole() == Role.ADMIN) {
                         System.out.print("Digite o id do usuário a ser removido:\n");
                         int id = Integer.parseInt(scanner.nextLine());
 
-                        f.removerUsuario(id);
-                    } 
-                    else 
-                    {
-                        //f.verHistorico();
+                        adminCmd = new RemoverUsuarioCommand(f, id);
                     }
                     break;
-                    
+
                 case 5:
-                    if (f.obterDadosUsuario("Cargo", f.obterId(usuario)) == Role.ADMIN.name()) 
-                    {
+                    if (usuario.getRole() == Role.ADMIN) {
                         System.out.print("Digite o id do hidrômetro:\n");
                         int id = Integer.parseInt(scanner.nextLine());
 
-                        Hidrometro h = f.criarHidro(id);
-
-                        f.cadastrarHidro(h);
-                    } 
-                    else 
-                    {
-                        //f.verHistorico();
+                        adminCmd = new CadastrarHidrometroCommand(f, id);
                     }
                     break;
 
                 case 6:
-                    if (f.obterDadosUsuario("Cargo", f.obterId(usuario)) == Role.ADMIN.name()) 
-                    {
+                    if (usuario.getRole() == Role.ADMIN) {
                         System.out.print("Digite o id do hidrômetro que quer associar:\n");
-                        int id_h = Integer.parseInt(scanner.nextLine());
+                        int idH = Integer.parseInt(scanner.nextLine());
 
                         System.out.print("Digite o id do usuário proprietário:\n");
-                        int id_u = Integer.parseInt(scanner.nextLine());
-                        
-                        f.associarUsuarioHidro(id_h, id_u);
-                    } 
-                    else 
-                    {
-                        //f.verHistorico();
+                        int idU = Integer.parseInt(scanner.nextLine());
+
+                        adminCmd = new AssociarUsuarioHidroCommand(f, idH, idU);
                     }
                     break;
-                    
+
                 case 7:
-                    if (f.obterDadosUsuario("Cargo", f.obterId(usuario)) == Role.ADMIN.name()) 
-                    {
-                        f.exibirHidrosUsers();
-                    } 
-                    else 
-                    {
-                        //f.verHistorico();
+                    if (usuario.getRole() == Role.ADMIN) {
+                        adminCmd = new ExibirHidrosUsersCommand(f);
                     }
                     break;
-                
+
                 case 8:
-                    if (f.obterDadosUsuario("Cargo", f.obterId(usuario)) == Role.ADMIN.name()) 
-                    {
+                    if (usuario.getRole() == Role.ADMIN) {
                         System.out.print("Digite o id do hidrômetro a ser removido:\n");
                         int id = Integer.parseInt(scanner.nextLine());
 
-                        f.removerHidrometro(id);
-                    } 
-                    else 
-                    {
-                        //f.verHistorico();
+                        adminCmd = new RemoverHidrometroCommand(f, id);
+                    }
+                    break;
+
+                case 9:
+                    if (usuario.getRole() == Role.ADMIN) {
+                        System.out.print("Digite o id do hidrômetro a ser monitorado:\n");
+                        int idH = Integer.parseInt(scanner.nextLine());
+
+                        System.out.print("Digite o caminho da pasta para monitoramento:\n");
+                        String caminho = scanner.nextLine();
+
+                        adminCmd = new AtivarMonitoramentoCommand(f, caminho, idH);
+                    }
+                    break;
+
+                case 10:
+                    if (usuario.getRole() == Role.ADMIN) {
+                        adminCmd = new ExibirMonitoramentoCommand(f);
+                    }
+                    break;
+
+                case 11:
+                    if (usuario.getRole() == Role.ADMIN) {
+                        adminCmd = new DesativarMonitoramentoCommand(f);
                     }
                     break;
 
@@ -194,6 +176,14 @@ public class Main
 
                 default:
                     System.out.println("Opção inválida");
+            }
+
+            if (adminCmd != null) {
+                adminInvoker.setComando(adminCmd);
+                adminInvoker.executar();
+            } else if (clienteCmd != null) {
+                clienteInvoker.setComando(clienteCmd);
+                clienteInvoker.executar();
             }
         }
         scanner.close();

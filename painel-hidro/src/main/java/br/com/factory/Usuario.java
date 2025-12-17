@@ -1,11 +1,13 @@
-package br.com.utilitarios;
+package br.com.factory;
+
+import br.com.utilitarios.Role;
 
 public class Usuario 
 {
-    private int id; 
-    private String username;
-    private String passwordHash;
-    private Role role;
+    protected int id; 
+    protected String username;
+    protected String passwordHash;
+    protected Role role;
 
     public Usuario(int id, String u, String ph) 
     {
