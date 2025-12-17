@@ -44,8 +44,17 @@ public class MonitorPastaImagem implements Sujeito {
         return volume;
     }
 
+    public Set<String> getArquivosConhecidos() {
+        return arquivosConhecidos;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public void verificarNovosArquivos() {
-        File[] arquivos = pasta.listFiles((dir, name) -> name.endsWith(".png") || name.endsWith(".jpg"));
+        File[] arquivos = pasta
+                .listFiles((dir, name) -> name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg"));
 
         if (arquivos == null)
             return;
@@ -60,7 +69,8 @@ public class MonitorPastaImagem implements Sujeito {
     }
 
     public void inicializarArquivosConhecidos() {
-        File[] arquivos = pasta.listFiles((dir, name) -> name.endsWith(".png") || name.endsWith(".jpg"));
+        File[] arquivos = pasta
+                .listFiles((dir, name) -> name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg"));
 
         if (arquivos == null)
             return;

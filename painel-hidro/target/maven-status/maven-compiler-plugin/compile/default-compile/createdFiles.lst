@@ -15,6 +15,7 @@ br\com\servicos_fachada\MonitoramentoAssync.class
 br\com\servicos_fachada\HidroUsuario.class
 br\com\factory\UsuarioClienteCreator.class
 br\com\servicos_fachada\CrudHidro.class
+br\com\command\command_admin\ExibirMonitoramentoCommand.class
 br\com\Main.class
 br\com\utilitarios\Role.class
 br\com\leitura_imagens\Observador.class
@@ -26,10 +27,12 @@ br\com\database\ConexaoBanco.class
 br\com\factory\Usuario.class
 br\com\factory\UsuarioAdminCreator.class
 br\com\servicos_fachada\CrudUsuarios.class
+br\com\command\command_admin\AtivarMonitoramentoCommand.class
 br\com\command\command_admin\ExibirHidrosUsersCommand.class
 br\com\dao\HidrometroDAO.class
 br\com\factory\UsuarioCreator.class
 br\com\leitura_imagens\Sujeito.class
+br\com\command\command_admin\DesativarMonitoramentoCommand.class
 br\com\dao\UsuarioDAO.class
 br\com\command\command_admin\CadastrarUsuarioCommand.class
 br\com\command\command_admin\ComandoAdmin.class

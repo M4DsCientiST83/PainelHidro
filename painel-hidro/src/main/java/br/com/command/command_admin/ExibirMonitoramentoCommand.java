@@ -24,7 +24,10 @@ public class ExibirMonitoramentoCommand implements ComandoAdmin {
 
         System.out.println("Exibindo monitoramento. Pressione ENTER para sair...");
 
-        final boolean[] sair = {false};
+        // Ativar exibição de mensagens de detecção
+        monitor.setExibindoMonitoramento(true);
+
+        final boolean[] sair = { false };
 
         Thread inputThread = new Thread(() -> {
             try {
@@ -42,7 +45,8 @@ public class ExibirMonitoramentoCommand implements ComandoAdmin {
         inputThread.start();
 
         while (monitor.isAtivo() && !sair[0]) {
-            System.out.printf("Hidrômetro ID: %d | Volume acumulado: %.2f\n", monitor.getIdHidrometro(), monitor.getVolumeAcumulado());
+            System.out.printf("Hidrômetro ID: %d | Volume acumulado: %.2f\n", monitor.getIdHidrometro(),
+                    monitor.getVolumeAcumulado());
             try {
                 // exibir a cada 5s para acompanhar a frequência de persistência
                 Thread.sleep(5000);
@@ -51,7 +55,10 @@ public class ExibirMonitoramentoCommand implements ComandoAdmin {
                 break;
             }
         }
-        
+
+        // Desativar exibição de mensagens de detecção
+        monitor.setExibindoMonitoramento(false);
+
         System.out.println("Saindo da exibição de monitoramento.");
     }
 }
