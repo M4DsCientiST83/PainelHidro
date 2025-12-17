@@ -15,10 +15,33 @@ public class ExibirMonitoramentoCommand implements ComandoAdmin {
 
     @Override
     public void executar() {
-        MonitoramentoAssync monitor = fachada.getMonitor();
+        java.util.Set<Integer> ativos = fachada.getMonitoresAtivos();
+
+        if (ativos.isEmpty()) {
+            System.out.println("Nenhum monitoramento ativo.");
+            return;
+        }
+
+        MonitoramentoAssync monitor = null;
+
+        if (ativos.size() == 1) {
+            monitor = fachada.getMonitorUnico();
+        } else {
+            System.out.println("Hidrômetros sendo monitorados: " + ativos);
+            System.out.print("Digite o ID do hidrômetro para exibir: ");
+            try {
+                java.util.Scanner scanner = new java.util.Scanner(System.in);
+                // Não fechar o scanner poisSystem.in é global
+                int id = Integer.parseInt(scanner.nextLine());
+                monitor = fachada.getMonitor(id);
+            } catch (Exception e) {
+                System.out.println("ID inválido.");
+                return;
+            }
+        }
 
         if (monitor == null || !monitor.isAtivo()) {
-            System.out.println("Monitoramento não está ativo.");
+            System.out.println("Monitoramento não encontrado ou inativo.");
             return;
         }
 
@@ -45,8 +68,13 @@ public class ExibirMonitoramentoCommand implements ComandoAdmin {
         inputThread.start();
 
         while (monitor.isAtivo() && !sair[0]) {
-            System.out.printf("Hidrômetro ID: %d | Volume acumulado: %.2f\n", monitor.getIdHidrometro(),
+            System.out.printf("Hidrômetro ID: %d | Volume acumulado: %.5f\n", monitor.getIdHidrometro(),
                     monitor.getVolumeAcumulado());
+
+            if (monitor.isAlertaConsumoElevado()) {
+                System.out.println("⚠️ ALERTA: Consumo elevado detectado! (> 0.8m³ em 12 iterações)");
+            }
+
             try {
                 // exibir a cada 5s para acompanhar a frequência de persistência
                 Thread.sleep(5000);

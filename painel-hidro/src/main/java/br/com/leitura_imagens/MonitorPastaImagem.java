@@ -11,6 +11,10 @@ public class MonitorPastaImagem implements Sujeito {
     private double volume;
     private String nome;
 
+    // Histórico de volumes para detecção de consumo elevado (12 iterações)
+    private final LinkedList<Double> historicoVolumes = new LinkedList<>();
+    private boolean alertaConsumoElevado = false;
+
     public MonitorPastaImagem(String caminhoPasta) {
         this.pasta = new File(caminhoPasta);
     }
@@ -34,6 +38,32 @@ public class MonitorPastaImagem implements Sujeito {
 
     public void setVolume(double v) {
         volume = v;
+
+        // Lógica de alerta: > 0.8m³ em 12 iterações
+        historicoVolumes.add(v);
+
+        // Manter tamanho máximo de 13 (atual + 12 anteriores)
+        if (historicoVolumes.size() > 13) {
+            historicoVolumes.removeFirst();
+        }
+
+        // Se temos histórico suficiente (ou pelo menos 2 para comparar)
+        if (historicoVolumes.size() > 1) {
+            double volumeInicial = historicoVolumes.getFirst();
+            double diff = v - volumeInicial;
+
+            if (diff > 0.8) {
+                alertaConsumoElevado = true;
+                // System.out.println("ALERTA: Consumo elevado detectado! " +
+                // String.format("%.5f", diff) + "m³ nas últimas iterações.");
+            } else {
+                alertaConsumoElevado = false;
+            }
+        }
+    }
+
+    public boolean isAlertaConsumoElevado() {
+        return alertaConsumoElevado;
     }
 
     public String getNome() {

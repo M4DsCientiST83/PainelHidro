@@ -14,11 +14,12 @@ import br.com.utilitarios.Role;
 public class Fachada {
     private CrudUsuarios crud;
     private CrudHidro crudh;
-    private MonitoramentoAssync monitor;
+    private java.util.Map<Integer, MonitoramentoAssync> monitores; // Monitoramento por ID
 
     public Fachada() {
         crud = new CrudUsuarios();
         crudh = new CrudHidro();
+        monitores = new java.util.HashMap<>();
     }
 
     public Usuario login(String u, String s) {
@@ -67,23 +68,43 @@ public class Fachada {
     }
 
     public void ativarMonitoramentoAssincrono(String caminhoPasta, int idHidrometro) {
-        if (monitor == null) {
-            monitor = new MonitoramentoAssync(caminhoPasta, idHidrometro);
-        }
-        monitor.ativarMonitoramento();
-    }
-
-    public MonitoramentoAssync getMonitor() {
-        return monitor;
-    }
-
-    public void desativarMonitoramentoAssincrono() {
-        if (monitor != null) {
-            monitor.desativarMonitoramento();
-            monitor = null;
-            System.out.println("Monitoramento desativado.");
+        if (!monitores.containsKey(idHidrometro)) {
+            MonitoramentoAssync monitor = new MonitoramentoAssync(caminhoPasta, idHidrometro);
+            monitores.put(idHidrometro, monitor);
+            monitor.ativarMonitoramento();
+            System.out.println("Monitoramento ativado para o hidrômetro " + idHidrometro);
         } else {
-            System.out.println("Não há monitoramento ativo para desativar.");
+            System.out.println("Já existe um monitoramento ativo para o hidrômetro " + idHidrometro);
+            monitores.get(idHidrometro).ativarMonitoramento();
+        }
+    }
+
+    public MonitoramentoAssync getMonitor(int idHidrometro) {
+        return monitores.get(idHidrometro);
+    }
+
+    // Método auxiliar para pegar o único monitor se houver apenas um
+    // (compatibilidade)
+    // Se houver mais de um, retorna null para forçar o usuário a especificar
+    public MonitoramentoAssync getMonitorUnico() {
+        if (monitores.size() == 1) {
+            return monitores.values().iterator().next();
+        }
+        return null;
+    }
+
+    public java.util.Set<Integer> getMonitoresAtivos() {
+        return monitores.keySet();
+    }
+
+    public void desativarMonitoramentoAssincrono(int idHidrometro) {
+        if (monitores.containsKey(idHidrometro)) {
+            MonitoramentoAssync monitor = monitores.get(idHidrometro);
+            monitor.desativarMonitoramento();
+            monitores.remove(idHidrometro);
+            System.out.println("Monitoramento desativado para o hidrômetro " + idHidrometro);
+        } else {
+            System.out.println("Não há monitoramento ativo para o hidrômetro " + idHidrometro);
         }
     }
 

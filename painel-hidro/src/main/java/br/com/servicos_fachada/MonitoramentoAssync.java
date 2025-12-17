@@ -199,4 +199,8 @@ public class MonitoramentoAssync {
     public void setExibindoMonitoramento(boolean exibindo) {
         this.exibindoMonitoramento = exibindo;
     }
+
+    public boolean isAlertaConsumoElevado() {
+        return monitor.isAlertaConsumoElevado();
+    }
 }
