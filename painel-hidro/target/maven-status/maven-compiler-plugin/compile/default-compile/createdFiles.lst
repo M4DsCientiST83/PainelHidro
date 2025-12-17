@@ -18,6 +18,7 @@ br\com\servicos_fachada\CrudHidro.class
 br\com\command\command_admin\ExibirMonitoramentoCommand.class
 br\com\Main.class
 br\com\utilitarios\Role.class
+br\com\leitura_imagens\HidrometroDigitalAdapter.class
 br\com\leitura_imagens\Observador.class
 br\com\command\command_admin\MenuAdminInvoker.class
 br\com\factory\UsuarioCliente.class
@@ -27,6 +28,7 @@ br\com\database\ConexaoBanco.class
 br\com\factory\Usuario.class
 br\com\factory\UsuarioAdminCreator.class
 br\com\servicos_fachada\CrudUsuarios.class
+br\com\leitura_imagens\HidrometroAdapter.class
 br\com\command\command_admin\AtivarMonitoramentoCommand.class
 br\com\command\command_admin\ExibirHidrosUsersCommand.class
 br\com\dao\HidrometroDAO.class
@@ -37,5 +39,6 @@ br\com\dao\UsuarioDAO.class
 br\com\command\command_admin\CadastrarUsuarioCommand.class
 br\com\command\command_admin\ComandoAdmin.class
 br\com\command\command_admin\AssociarUsuarioHidroCommand.class
+br\com\leitura_imagens\HidrometroSimplexAdapter.class
 br\com\leitura_imagens\ProcessadorImagem.class
 br\com\factory\UsuarioAdmin.class

@@ -15,6 +15,7 @@ INSERT INTO usuario VALUES (2, 'rodrigues', '1234', 'CLIENTE');
 CREATE TABLE hidrometro(
     id INT PRIMARY KEY,
     usuario_id INT,
-    volume_acumulado DECIMAL(5,2),
+    volume_acumulado DECIMAL(10,5),
+    tipo CHAR(1) DEFAULT 'A',
     FOREIGN KEY(usuario_id) REFERENCES usuario(id)
 );

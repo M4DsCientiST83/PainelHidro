@@ -24,6 +24,9 @@ C:\PainelHidro\painel-hidro\src\main\java\br\com\factory\UsuarioAdminCreator.jav
 C:\PainelHidro\painel-hidro\src\main\java\br\com\factory\UsuarioCliente.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\factory\UsuarioClienteCreator.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\factory\UsuarioCreator.java
+C:\PainelHidro\painel-hidro\src\main\java\br\com\leitura_imagens\HidrometroAdapter.java
+C:\PainelHidro\painel-hidro\src\main\java\br\com\leitura_imagens\HidrometroDigitalAdapter.java
+C:\PainelHidro\painel-hidro\src\main\java\br\com\leitura_imagens\HidrometroSimplexAdapter.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\leitura_imagens\MonitorPastaImagem.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\leitura_imagens\Observador.java
 C:\PainelHidro\painel-hidro\src\main\java\br\com\leitura_imagens\ProcessadorImagem.java

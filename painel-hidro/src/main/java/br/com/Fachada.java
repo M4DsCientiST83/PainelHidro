@@ -117,7 +117,11 @@ public class Fachada {
     }
 
     public void cadastrarHidro(Hidrometro h) {
-        crudh.criarHidro(h);
+        cadastrarHidro(h, 'A'); // Tipo padrão A
+    }
+
+    public void cadastrarHidro(Hidrometro h, char tipo) {
+        crudh.criarHidro(h, tipo);
     }
 
     public void associarUsuarioHidro(int id_h, int id_u) {

@@ -114,7 +114,12 @@ public class Main {
                         System.out.print("Digite o id do hidrômetro:\n");
                         int id = Integer.parseInt(scanner.nextLine());
 
-                        adminCmd = new CadastrarHidrometroCommand(f, id);
+                        System.out.print("Digite o tipo do hidrômetro (A= Hidrômetro Rodrigues, B= Hidrômetro Cefras):\n");
+                        String inputTipo = scanner.nextLine();
+                        char tipo = (inputTipo != null && !inputTipo.isEmpty()) ? inputTipo.toUpperCase().charAt(0)
+                                : 'A';
+
+                        adminCmd = new CadastrarHidrometroCommand(f, id, tipo);
                     }
                     break;
 

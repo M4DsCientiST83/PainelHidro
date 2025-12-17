@@ -21,8 +21,13 @@ public class MonitoramentoAssync {
     public MonitoramentoAssync(String c, int idHidrometro) {
         this.caminhoPasta = c;
         this.idHidrometro = idHidrometro;
+
+        // Buscar tipo do hidrômetro no banco de dados
+        HidrometroDAO dao = new HidrometroDAO();
+        char tipoHidrometro = dao.buscarTipo(idHidrometro);
+
         monitor = new MonitorPastaImagem(caminhoPasta);
-        proc = new ProcessadorImagem(monitor);
+        proc = new ProcessadorImagem(monitor, tipoHidrometro);
 
         monitor.cadastrar(proc);
         // Processar arquivos existentes para obter volume inicial

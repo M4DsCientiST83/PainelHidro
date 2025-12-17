@@ -11,9 +11,18 @@ import java.io.IOException;
 
 public class ProcessadorImagem implements Observador {
     private final MonitorPastaImagem sujeito;
+    private final HidrometroAdapter adapter;
 
-    public ProcessadorImagem(MonitorPastaImagem sujeito) {
+    public ProcessadorImagem(MonitorPastaImagem sujeito, char tipoHidrometro) {
         this.sujeito = sujeito;
+        this.adapter = criarAdapter(tipoHidrometro);
+    }
+
+    private HidrometroAdapter criarAdapter(char tipo) {
+        return switch (tipo) {
+            case 'B' -> new HidrometroSimplexAdapter();
+            default -> new HidrometroDigitalAdapter(); // 'A' ou qualquer outro = tipo A
+        };
     }
 
     @Override
@@ -33,17 +42,8 @@ public class ProcessadorImagem implements Observador {
             int w = imagem.getWidth();
             int h = imagem.getHeight();
 
-            // definições relativas para tentar encontrar o display do odômetro
-            // O display digital está no topo-centro da imagem em um retângulo branco
-            // Focar apenas na área do retângulo com os números
-            int[][] crops = new int[][] {
-                    // x, y, width, height (valores relativos serão convertidos abaixo)
-                    { (int) (w * 0.30), (int) (h * 0.36), (int) (w * 0.40), (int) (h * 0.06) }, // Display principal -
-                                                                                                // mais baixo
-                    { (int) (w * 0.28), (int) (h * 0.35), (int) (w * 0.44), (int) (h * 0.07) }, // Um pouco mais largo
-                    { (int) (w * 0.25), (int) (h * 0.34), (int) (w * 0.50), (int) (h * 0.08) }, // Ainda mais largo
-                    { (int) (w * 0.32), (int) (h * 0.37), (int) (w * 0.36), (int) (h * 0.05) } // Mais estreito
-            };
+            // Obter regiões de recorte do adapter
+            int[][] crops = adapter.getCropRegions(w, h);
 
             BufferedImage scaled = null;
             String ocrResult = null;
@@ -130,33 +130,11 @@ public class ProcessadorImagem implements Observador {
             }
 
             try {
-                // O hidrômetro tem formato: 4 dígitos pretos (inteiro) + 2 dígitos vermelhos
-                // (decimal)
-                // Exemplo: "000173" deve ser lido como "0.00173"
-                // Se o OCR leu apenas números sem ponto decimal, inserir o ponto na posição
-                // correta
-                String volumeStr = ocrResult;
-
-                if (!volumeStr.contains(".")) {
-                    // Se tem 6 ou mais dígitos, inserir ponto antes dos últimos 2 dígitos
-                    if (volumeStr.length() >= 6) {
-                        int posicaoPonto = volumeStr.length() - 2;
-                        volumeStr = volumeStr.substring(0, posicaoPonto) + "." + volumeStr.substring(posicaoPonto);
-                    } else if (volumeStr.length() > 2) {
-                        // Se tem menos de 6 dígitos mas mais de 2, ainda inserir ponto antes dos
-                        // últimos 2
-                        int posicaoPonto = volumeStr.length() - 2;
-                        volumeStr = volumeStr.substring(0, posicaoPonto) + "." + volumeStr.substring(posicaoPonto);
-                    } else {
-                        // Se tem 2 ou menos dígitos, são apenas decimais
-                        volumeStr = "0." + volumeStr;
-                    }
-                }
-
-                double vol = Double.parseDouble(volumeStr);
+                // Usar o adapter para processar o volume de acordo com o tipo de hidrômetro
+                double vol = adapter.processarVolume(ocrResult);
                 sujeito.setVolume(vol);
-                System.out.println("Volume detectado: " + vol);
-                System.out.println("Volume definido no monitor: " + sujeito.getVolume());
+                // System.out.println("Volume detectado: " + vol);
+                // System.out.println("Volume definido no monitor: " + sujeito.getVolume());
             } catch (NumberFormatException nfe) {
                 System.out.println("Não foi possível converter para double: " + ocrResult);
             }
